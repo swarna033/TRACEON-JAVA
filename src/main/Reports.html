@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRACEON - Reports</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.nav a {
+    display: block;
+    text-decoration: none;
+    color: #4b5563;
+    padding: 13px 15px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+    width: calc(100% - 240px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.page-description {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.system-status {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* SUMMARY */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.card-title {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.blue {
+    color: #2563eb;
+}
+
+.red {
+    color: #dc2626;
+}
+
+.green {
+    color: #16a34a;
+}
+
+.orange {
+    color: #d97706;
+}
+
+/* SECTION */
+
+.section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 18px;
+}
+
+/* REPORT GRID */
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.report-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.report-card h3 {
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.report-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 13px;
+}
+
+.report-row:last-child {
+    border-bottom: none;
+}
+
+.report-label {
+    color: #6b7280;
+}
+
+.report-value {
+    font-weight: bold;
+}
+
+/* STATUS */
+
+.status-online {
+    color: #16a34a;
+}
+
+.status-warning {
+    color: #d97706;
+}
+
+.status-danger {
+    color: #dc2626;
+}
+
+/* INFO */
+
+.info-box {
+    padding: 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+    color: #1d4ed8;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        TRACEON
+    </div>
+
+    <div class="subtitle">
+        Disaster Rescue System
+    </div>
+
+    <div class="nav">
+
+        <a href="/">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/families">
+            Families
+        </a>
+
+        <a href="/network">
+            Node Network
+        </a>
+
+        <a href="/routes">
+            Routes
+        </a>
+
+        <a href="/rescue">
+            Rescue Tracking
+        </a>
+
+        <a href="/reports" class="active">
+            Reports
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="page-title">
+                System Reports
+            </div>
+
+            <div class="page-description">
+                TRACEON disaster response system overview and statistics
+            </div>
+
+        </div>
+
+        <div class="system-status" id="systemStatus">
+            ● SYSTEM ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                TOTAL ALERTS
+            </div>
+
+            <div class="card-value blue" id="totalAlerts">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                HIGH PRIORITY SOS
+            </div>
+
+            <div class="card-value red" id="highAlerts">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                REGISTERED FAMILIES
+            </div>
+
+            <div class="card-value blue" id="totalFamilies">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                RESCUED CASES
+            </div>
+
+            <div class="card-value green" id="rescuedCases">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- REPORT DETAILS -->
+
+    <div class="section">
+
+        <div class="section-title">
+            System Overview
+        </div>
+
+
+        <div class="report-grid">
+
+
+            <!-- ALERT REPORT -->
+
+            <div class="report-card">
+
+                <h3>
+                    Emergency Alert Report
+                </h3>
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Total Alerts
+                    </span>
+
+                    <span class="report-value" id="reportTotalAlerts">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        High Priority SOS
+                    </span>
+
+                    <span class="report-value red" id="reportHigh">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        HELP Requests
+                    </span>
+
+                    <span class="report-value orange" id="reportHelp">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Pending Alerts
+                    </span>
+
+                    <span class="report-value" id="reportPending">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- FAMILY REPORT -->
+
+            <div class="report-card">
+
+                <h3>
+                    Family Management Report
+                </h3>
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Registered Families
+                    </span>
+
+                    <span class="report-value" id="reportFamilies">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Registered Houses
+                    </span>
+
+                    <span class="report-value" id="reportHouses">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Locations
+                    </span>
+
+                    <span class="report-value" id="reportLocations">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- NODE REPORT -->
+
+            <div class="report-card">
+
+                <h3>
+                    Communication Network Report
+                </h3>
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Total Nodes
+                    </span>
+
+                    <span class="report-value" id="reportNodes">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Active Nodes
+                    </span>
+
+                    <span class="report-value green" id="reportActiveNodes">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Available Routes
+                    </span>
+
+                    <span class="report-value green" id="reportAvailableRoutes">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Blocked Routes
+                    </span>
+
+                    <span class="report-value red" id="reportBlockedRoutes">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- RESCUE REPORT -->
+
+            <div class="report-card">
+
+                <h3>
+                    Rescue Operations Report
+                </h3>
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Pending
+                    </span>
+
+                    <span class="report-value orange" id="reportRescuePending">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        In Progress
+                    </span>
+
+                    <span class="report-value blue" id="reportRescueProgress">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Assigned
+                    </span>
+
+                    <span class="report-value" id="reportRescueAssigned">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div class="report-row">
+
+                    <span class="report-label">
+                        Rescued
+                    </span>
+
+                    <span class="report-value green" id="reportRescueRescued">
+                        0
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SYSTEM INFORMATION -->
+
+    <div class="section">
+
+        <div class="section-title">
+            TRACEON System Information
+        </div>
+
+        <div class="info-box">
+
+            <strong>System Architecture:</strong>
+            Java Backend + SQLite Database + Web Frontend
+
+            <br><br>
+
+            <strong>Communication:</strong>
+            LoRa-based emergency communication architecture
+
+            <br><br>
+
+            <strong>Identification:</strong>
+            Family ID + House ID + Node ID
+
+            <br><br>
+
+            <strong>Alert Processing:</strong>
+            Rule-based emergency priority classification
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* LOAD SYSTEM STATUS */
+
+async function loadSystemStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        if (!response.ok) {
+            throw new Error("Status failed");
+        }
+
+        const data =
+            await response.json();
+
+        if (data.status === "ONLINE") {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM ONLINE";
+
+        } else {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM OFFLINE";
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("systemStatus")
+            .innerHTML = "● BACKEND OFFLINE";
+
+    }
+
+}
+
+
+/* LOAD REPORT DATA */
+
+async function loadReports() {
+
+    try {
+
+        const [
+            alertsResponse,
+            familyResponse,
+            nodesResponse,
+            routesResponse,
+            rescueResponse
+        ] = await Promise.all([
+
+            fetch("/api/alerts"),
+
+            fetch("/api/family"),
+
+            fetch("/api/nodes"),
+
+            fetch("/api/routes"),
+
+            fetch("/api/rescue")
+
+        ]);
+
+
+        const alerts =
+            alertsResponse.ok
+                ? await alertsResponse.json()
+                : [];
+
+        const families =
+            familyResponse.ok
+                ? await familyResponse.json()
+                : [];
+
+        const nodes =
+            nodesResponse.ok
+                ? await nodesResponse.json()
+                : [];
+
+        const routes =
+            routesResponse.ok
+                ? await routesResponse.json()
+                : [];
+
+        const rescueCases =
+            rescueResponse.ok
+                ? await rescueResponse.json()
+                : [];
+
+
+        updateReport(
+
+            Array.isArray(alerts)
+                ? alerts
+                : [],
+
+            Array.isArray(families)
+                ? families
+                : [],
+
+            Array.isArray(nodes)
+                ? nodes
+                : [],
+
+            Array.isArray(routes)
+                ? routes
+                : [],
+
+            Array.isArray(rescueCases)
+                ? rescueCases
+                : []
+
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Error loading reports:",
+            error
+        );
+
+    }
+
+}
+
+
+/* UPDATE REPORT */
+
+function updateReport(
+    alerts,
+    families,
+    nodes,
+    routes,
+    rescueCases
+) {
+
+    /* ALERTS */
+
+    const highAlerts =
+        alerts.filter(alert =>
+            String(alert.priority || "")
+                .toUpperCase() === "HIGH"
+        ).length;
+
+
+    const helpAlerts =
+        alerts.filter(alert =>
+            String(alert.alert_type || "")
+                .toUpperCase() === "HELP"
+            ||
+            String(alert.priority || "")
+                .toUpperCase() === "MEDIUM"
+        ).length;
+
+
+    const pendingAlerts =
+        alerts.filter(alert =>
+            String(alert.status || "")
+                .toUpperCase() === "PENDING"
+            ||
+            String(alert.status || "")
+                .toUpperCase() === "NEW"
+        ).length;
+
+
+    /* FAMILIES */
+
+    const houses =
+        new Set();
+
+    const locations =
+        new Set();
+
+
+    families.forEach(family => {
+
+        if (family.house_id) {
+            houses.add(family.house_id);
+        }
+
+        if (family.location) {
+            locations.add(family.location);
+        }
+
+    });
+
+
+    /* NODES */
+
+    const activeNodes =
+        nodes.filter(node =>
+            String(node.status || "")
+                .toUpperCase() === "ACTIVE"
+        ).length;
+
+
+    /* ROUTES */
+
+    const availableRoutes =
+        routes.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "AVAILABLE"
+        ).length;
+
+
+    const blockedRoutes =
+        routes.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "BLOCKED"
+        ).length;
+
+
+    /* RESCUE */
+
+    const rescuePending =
+        rescueCases.filter(rescueCase =>
+            String(rescueCase.status || "")
+                .toUpperCase() === "PENDING"
+        ).length;
+
+
+    const rescueProgress =
+        rescueCases.filter(rescueCase =>
+            String(rescueCase.status || "")
+                .toUpperCase() === "IN PROGRESS"
+        ).length;
+
+
+    const rescueAssigned =
+        rescueCases.filter(rescueCase =>
+            String(rescueCase.status || "")
+                .toUpperCase() === "ASSIGNED"
+        ).length;
+
+
+    const rescueRescued =
+        rescueCases.filter(rescueCase =>
+            String(rescueCase.status || "")
+                .toUpperCase() === "RESCUED"
+        ).length;
+
+
+    /* SUMMARY CARDS */
+
+    document.getElementById("totalAlerts")
+        .textContent = alerts.length;
+
+    document.getElementById("highAlerts")
+        .textContent = highAlerts;
+
+    document.getElementById("totalFamilies")
+        .textContent = families.length;
+
+    document.getElementById("rescuedCases")
+        .textContent = rescueRescued;
+
+
+    /* ALERT REPORT */
+
+    document.getElementById("reportTotalAlerts")
+        .textContent = alerts.length;
+
+    document.getElementById("reportHigh")
+        .textContent = highAlerts;
+
+    document.getElementById("reportHelp")
+        .textContent = helpAlerts;
+
+    document.getElementById("reportPending")
+        .textContent = pendingAlerts;
+
+
+    /* FAMILY REPORT */
+
+    document.getElementById("reportFamilies")
+        .textContent = families.length;
+
+    document.getElementById("reportHouses")
+        .textContent = houses.size;
+
+    document.getElementById("reportLocations")
+        .textContent = locations.size;
+
+
+    /* NODE REPORT */
+
+    document.getElementById("reportNodes")
+        .textContent = nodes.length;
+
+    document.getElementById("reportActiveNodes")
+        .textContent = activeNodes;
+
+    document.getElementById("reportAvailableRoutes")
+        .textContent = availableRoutes;
+
+    document.getElementById("reportBlockedRoutes")
+        .textContent = blockedRoutes;
+
+
+    /* RESCUE REPORT */
+
+    document.getElementById("reportRescuePending")
+        .textContent = rescuePending;
+
+    document.getElementById("reportRescueProgress")
+        .textContent = rescueProgress;
+
+    document.getElementById("reportRescueAssigned")
+        .textContent = rescueAssigned;
+
+    document.getElementById("reportRescueRescued")
+        .textContent = rescueRescued;
+
+}
+
+
+/* INITIAL LOAD */
+
+loadSystemStatus();
+
+loadReports();
+
+
+/* AUTO REFRESH */
+
+setInterval(() => {
+
+    loadSystemStatus();
+
+    loadReports();
+
+}, 10000);
+
+</script>
+
+</body>
+</html>

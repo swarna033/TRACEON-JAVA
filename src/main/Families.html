@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRACEON - Families</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+    display: flex;
+    min-height: 100vh;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 18px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.nav a {
+    display: block;
+    text-decoration: none;
+    color: #4b5563;
+    padding: 13px 15px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+.main {
+    margin-left: 240px;
+    padding: 30px;
+    width: calc(100% - 240px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.page-description {
+    color: #6b7280;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.system-status {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* CARDS */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.card-title {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* SECTION */
+.section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.refresh-text {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* TABLE */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 13px;
+    background: #f8fafc;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 14px 13px;
+    border-bottom: 1px solid #eef0f3;
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+.family-id {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.house-id {
+    color: #7c3aed;
+    font-weight: bold;
+}
+
+.location {
+    color: #4b5563;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #9ca3af;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <div class="logo">TRACEON</div>
+    <div class="subtitle">Disaster Rescue System</div>
+
+    <div class="nav">
+        <a href="/">Dashboard</a>
+        <a href="/alerts">Alerts</a>
+        <a href="/families" class="active">Families</a>
+        <a href="/network">Node Network</a>
+        <a href="/routes">Routes</a>
+        <a href="/rescue">Rescue Tracking</a>
+        <a href="/reports">Reports</a>
+    </div>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+            <div class="page-title">Family Management</div>
+
+            <div class="page-description">
+                Manage registered families and household identification
+            </div>
+        </div>
+
+        <div class="system-status" id="systemStatus">
+            ● SYSTEM ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+    <div class="cards">
+
+        <div class="card">
+            <div class="card-title">
+                REGISTERED FAMILIES
+            </div>
+
+            <div class="card-value" id="familyCount">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                REGISTERED HOUSES
+            </div>
+
+            <div class="card-value" id="houseCount">
+                0
+            </div>
+        </div>
+
+
+        <div class="card">
+            <div class="card-title">
+                LOCATIONS
+            </div>
+
+            <div class="card-value" id="locationCount">
+                0
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- FAMILY TABLE -->
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Registered Family Records
+            </div>
+
+            <div class="refresh-text">
+                Auto refresh: 10 seconds
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Family ID</th>
+                        <th>House ID</th>
+                        <th>Family Name</th>
+                        <th>Location</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="familyTable">
+
+                    <tr>
+                        <td colspan="4" class="empty">
+                            Loading family data...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* LOAD SYSTEM STATUS */
+async function loadSystemStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        if (!response.ok) {
+            throw new Error("Status failed");
+        }
+
+        const data =
+            await response.json();
+
+        if (data.status === "ONLINE") {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM ONLINE";
+
+        } else {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM OFFLINE";
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("systemStatus")
+            .innerHTML = "● BACKEND OFFLINE";
+
+    }
+
+}
+
+
+/* LOAD FAMILY DATA */
+async function loadFamilies() {
+
+    try {
+
+        const response =
+            await fetch("/api/family");
+
+        if (!response.ok) {
+            throw new Error("Family API failed");
+        }
+
+        const data =
+            await response.json();
+
+        const families =
+            Array.isArray(data) ? data : [];
+
+        updateSummary(families);
+
+        renderFamilies(families);
+
+    } catch (error) {
+
+        console.error(
+            "Error loading families:",
+            error
+        );
+
+        document.getElementById("familyTable")
+            .innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty">
+                        Unable to load family data
+                    </td>
+                </tr>
+            `;
+
+    }
+
+}
+
+
+/* UPDATE SUMMARY */
+function updateSummary(families) {
+
+    document.getElementById("familyCount")
+        .textContent = families.length;
+
+
+    const houses = new Set();
+
+    const locations = new Set();
+
+
+    families.forEach(family => {
+
+        if (family.house_id) {
+            houses.add(family.house_id);
+        }
+
+        if (family.location) {
+            locations.add(family.location);
+        }
+
+    });
+
+
+    document.getElementById("houseCount")
+        .textContent = houses.size;
+
+
+    document.getElementById("locationCount")
+        .textContent = locations.size;
+
+}
+
+
+/* RENDER TABLE */
+function renderFamilies(families) {
+
+    const table =
+        document.getElementById("familyTable");
+
+
+    if (families.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No registered families found
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        families.map(family => {
+
+            return `
+                <tr>
+
+                    <td class="family-id">
+                        ${escapeHTML(
+                            family.family_id || "-"
+                        )}
+                    </td>
+
+                    <td class="house-id">
+                        ${escapeHTML(
+                            family.house_id || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            family.family_name || "-"
+                        )}
+                    </td>
+
+                    <td class="location">
+                        ${escapeHTML(
+                            family.location || "-"
+                        )}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* HTML SAFETY */
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* INITIAL LOAD */
+loadSystemStatus();
+loadFamilies();
+
+
+/* AUTO REFRESH */
+setInterval(() => {
+
+    loadSystemStatus();
+    loadFamilies();
+
+}, 10000);
+
+</script>
+
+</body>
+</html>

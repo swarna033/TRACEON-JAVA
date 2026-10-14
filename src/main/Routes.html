@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRACEON - Routes</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.nav a {
+    display: block;
+    text-decoration: none;
+    color: #4b5563;
+    padding: 13px 15px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+    width: calc(100% - 240px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.page-description {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.system-status {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.card-title {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.available {
+    color: #16a34a;
+}
+
+.blocked {
+    color: #dc2626;
+}
+
+/* SECTION */
+
+.section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.refresh-text {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 13px;
+    background: #f8fafc;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 14px 13px;
+    border-bottom: 1px solid #eef0f3;
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* BADGES */
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.badge-available {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-blocked {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.route-id {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.node-name {
+    font-weight: 600;
+}
+
+.distance {
+    color: #4b5563;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #9ca3af;
+}
+
+/* INFO */
+
+.info-box {
+    margin-top: 22px;
+    padding: 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 9px;
+    color: #1d4ed8;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        TRACEON
+    </div>
+
+    <div class="subtitle">
+        Disaster Rescue System
+    </div>
+
+    <div class="nav">
+
+        <a href="/">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/families">
+            Families
+        </a>
+
+        <a href="/network">
+            Node Network
+        </a>
+
+        <a href="/routes" class="active">
+            Routes
+        </a>
+
+        <a href="/rescue">
+            Rescue Tracking
+        </a>
+
+        <a href="/reports">
+            Reports
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="page-title">
+                Route Monitoring
+            </div>
+
+            <div class="page-description">
+                Monitor communication routes between disaster network nodes
+            </div>
+
+        </div>
+
+        <div class="system-status" id="systemStatus">
+            ● SYSTEM ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                TOTAL ROUTES
+            </div>
+
+            <div class="card-value" id="totalRoutes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                AVAILABLE ROUTES
+            </div>
+
+            <div class="card-value available" id="availableRoutes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                BLOCKED ROUTES
+            </div>
+
+            <div class="card-value blocked" id="blockedRoutes">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ROUTE TABLE -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Communication Routes
+            </div>
+
+            <div class="refresh-text">
+                Auto refresh: 10 seconds
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Route ID
+                        </th>
+
+                        <th>
+                            Source Node
+                        </th>
+
+                        <th>
+                            Destination Node
+                        </th>
+
+                        <th>
+                            Distance
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="routeTable">
+
+                    <tr>
+
+                        <td colspan="5" class="empty">
+                            Loading route data...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <strong>Route Monitoring:</strong>
+            Green routes indicate available communication paths.
+            Red routes indicate blocked communication paths.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* LOAD SYSTEM STATUS */
+
+async function loadSystemStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        if (!response.ok) {
+            throw new Error("Status failed");
+        }
+
+        const data =
+            await response.json();
+
+        if (data.status === "ONLINE") {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM ONLINE";
+
+        } else {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM OFFLINE";
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("systemStatus")
+            .innerHTML = "● BACKEND OFFLINE";
+
+    }
+
+}
+
+
+/* LOAD ROUTES */
+
+async function loadRoutes() {
+
+    try {
+
+        const response =
+            await fetch("/api/routes");
+
+        if (!response.ok) {
+            throw new Error("Route API failed");
+        }
+
+        const data =
+            await response.json();
+
+        const routes =
+            Array.isArray(data) ? data : [];
+
+        updateSummary(routes);
+
+        renderRoutes(routes);
+
+    } catch (error) {
+
+        console.error(
+            "Error loading routes:",
+            error
+        );
+
+        document.getElementById("routeTable")
+            .innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        Unable to load route data
+                    </td>
+                </tr>
+            `;
+
+    }
+
+}
+
+
+/* SUMMARY */
+
+function updateSummary(routes) {
+
+    const available =
+        routes.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "AVAILABLE"
+        ).length;
+
+
+    const blocked =
+        routes.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "BLOCKED"
+        ).length;
+
+
+    document.getElementById("totalRoutes")
+        .textContent = routes.length;
+
+    document.getElementById("availableRoutes")
+        .textContent = available;
+
+    document.getElementById("blockedRoutes")
+        .textContent = blocked;
+
+}
+
+
+/* RENDER ROUTES */
+
+function renderRoutes(routes) {
+
+    const table =
+        document.getElementById("routeTable");
+
+
+    if (routes.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty">
+                    No communication routes found
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        routes.map(route => {
+
+            const status =
+                String(route.status || "BLOCKED")
+                    .toUpperCase();
+
+
+            const statusClass =
+                status === "AVAILABLE"
+                    ? "badge-available"
+                    : "badge-blocked";
+
+
+            return `
+                <tr>
+
+                    <td class="route-id">
+                        ${escapeHTML(
+                            route.route_id || "-"
+                        )}
+                    </td>
+
+                    <td class="node-name">
+                        ${escapeHTML(
+                            route.source_node || "-"
+                        )}
+                    </td>
+
+                    <td class="node-name">
+                        ${escapeHTML(
+                            route.destination_node || "-"
+                        )}
+                    </td>
+
+                    <td class="distance">
+                        ${escapeHTML(
+                            route.distance ?? "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* HTML SAFETY */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* INITIAL LOAD */
+
+loadSystemStatus();
+
+loadRoutes();
+
+
+/* AUTO REFRESH */
+
+setInterval(() => {
+
+    loadSystemStatus();
+
+    loadRoutes();
+
+}, 10000);
+
+</script>
+
+</body>
+</html>

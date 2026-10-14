@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRACEON - Node Network</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.nav a {
+    display: block;
+    text-decoration: none;
+    color: #4b5563;
+    padding: 13px 15px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+    width: calc(100% - 240px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.page-description {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.system-status {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.card-title {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.active-value {
+    color: #16a34a;
+}
+
+.blocked-value {
+    color: #dc2626;
+}
+
+/* SECTION */
+
+.section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.refresh-text {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* NETWORK */
+
+.network-container {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* SVG ROUTES */
+
+.network-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.route-line {
+    stroke-width: 3;
+}
+
+.available-line {
+    stroke: #16a34a;
+}
+
+.blocked-line {
+    stroke: #dc2626;
+    stroke-dasharray: 8 7;
+}
+
+/* NODE */
+
+.network-node {
+    position: absolute;
+    width: 95px;
+    text-align: center;
+    transform: translate(-50%, -50%);
+}
+
+.node-icon {
+    width: 52px;
+    height: 52px;
+    margin: auto;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #2563eb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    font-size: 21px;
+}
+
+.node-active .node-icon {
+    border-color: #16a34a;
+}
+
+.node-inactive .node-icon {
+    border-color: #dc2626;
+}
+
+.node-label {
+    margin-top: 7px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.node-status {
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 3px;
+}
+
+/* NODE POSITIONS */
+
+.n01 {
+    left: 15%;
+    top: 25%;
+}
+
+.n02 {
+    left: 38%;
+    top: 18%;
+}
+
+.n03 {
+    left: 62%;
+    top: 30%;
+}
+
+.n04 {
+    left: 35%;
+    top: 65%;
+}
+
+.n05 {
+    left: 65%;
+    top: 70%;
+}
+
+/* RESCUE CENTER */
+
+.rescue-center {
+    position: absolute;
+    right: 8%;
+    top: 45%;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.rescue-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 3px solid #7c3aed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-size: 27px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.rescue-label {
+    margin-top: 7px;
+    font-weight: bold;
+    color: #7c3aed;
+    font-size: 13px;
+}
+
+/* LEGEND */
+
+.legend {
+    display: flex;
+    gap: 25px;
+    margin-top: 15px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.legend-box {
+    width: 18px;
+    height: 4px;
+    border-radius: 3px;
+}
+
+.legend-available {
+    background: #16a34a;
+}
+
+.legend-blocked {
+    background: #dc2626;
+}
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 13px;
+    background: #f8fafc;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 14px 13px;
+    border-bottom: 1px solid #eef0f3;
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* BADGES */
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.badge-active {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-inactive {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-available {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-blocked {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.empty {
+    text-align: center;
+    padding: 35px;
+    color: #9ca3af;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1000px) {
+
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">TRACEON</div>
+
+    <div class="subtitle">
+        Disaster Rescue System
+    </div>
+
+    <div class="nav">
+
+        <a href="/">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/families">
+            Families
+        </a>
+
+        <a href="/network" class="active">
+            Node Network
+        </a>
+
+        <a href="/routes">
+            Routes
+        </a>
+
+        <a href="/rescue">
+            Rescue Tracking
+        </a>
+
+        <a href="/reports">
+            Reports
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="page-title">
+                Node Network
+            </div>
+
+            <div class="page-description">
+                Monitor LoRa communication nodes and network connectivity
+            </div>
+
+        </div>
+
+        <div class="system-status" id="systemStatus">
+            ● SYSTEM ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                TOTAL NODES
+            </div>
+
+            <div class="card-value" id="totalNodes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                ACTIVE NODES
+            </div>
+
+            <div class="card-value active-value" id="activeNodes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                AVAILABLE ROUTES
+            </div>
+
+            <div class="card-value active-value" id="availableRoutes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                BLOCKED ROUTES
+            </div>
+
+            <div class="card-value blocked-value" id="blockedRoutes">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NETWORK GRAPH -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Communication Network
+            </div>
+
+            <div class="refresh-text">
+                Auto refresh: 10 seconds
+            </div>
+
+        </div>
+
+
+        <div class="network-container">
+
+            <!-- ROUTE LINES -->
+
+            <svg
+                class="network-lines"
+                viewBox="0 0 1000 450"
+                preserveAspectRatio="none"
+                id="networkSvg">
+
+                <!-- Lines are created dynamically -->
+
+            </svg>
+
+
+            <!-- NODE 01 -->
+
+            <div
+                class="network-node n01"
+                id="node-N01">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N01
+                </div>
+
+                <div class="node-status">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- NODE 02 -->
+
+            <div
+                class="network-node n02"
+                id="node-N02">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N02
+                </div>
+
+                <div class="node-status">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- NODE 03 -->
+
+            <div
+                class="network-node n03"
+                id="node-N03">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N03
+                </div>
+
+                <div class="node-status">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- NODE 04 -->
+
+            <div
+                class="network-node n04"
+                id="node-N04">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N04
+                </div>
+
+                <div class="node-status">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- NODE 05 -->
+
+            <div
+                class="network-node n05"
+                id="node-N05">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N05
+                </div>
+
+                <div class="node-status">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- RESCUE CENTER -->
+
+            <div class="rescue-center">
+
+                <div class="rescue-icon">
+                    🏥
+                </div>
+
+                <div class="rescue-label">
+                    RESCUE CENTER
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- LEGEND -->
+
+        <div class="legend">
+
+            <div class="legend-item">
+
+                <div class="legend-box legend-available"></div>
+
+                Available Route
+
+            </div>
+
+
+            <div class="legend-item">
+
+                <div class="legend-box legend-blocked"></div>
+
+                Blocked Route
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NODE STATUS -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Node Status
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Node ID
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Last Message
+                        </th>
+
+                        <th>
+                            Messages Forwarded
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="nodeTable">
+
+                    <tr>
+
+                        <td colspan="4" class="empty">
+                            Loading node data...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ROUTE STATUS -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Network Route Status
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Route ID
+                        </th>
+
+                        <th>
+                            Source Node
+                        </th>
+
+                        <th>
+                            Destination Node
+                        </th>
+
+                        <th>
+                            Distance
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="routeTable">
+
+                    <tr>
+
+                        <td colspan="5" class="empty">
+                            Loading route data...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* DATA */
+
+let nodesData = [];
+let routesData = [];
+
+
+/* SYSTEM STATUS */
+
+async function loadSystemStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        if (!response.ok) {
+            throw new Error("Status failed");
+        }
+
+        const data =
+            await response.json();
+
+        if (data.status === "ONLINE") {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM ONLINE";
+
+        } else {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM OFFLINE";
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("systemStatus")
+            .innerHTML = "● BACKEND OFFLINE";
+
+    }
+
+}
+
+
+/* LOAD NODES */
+
+async function loadNodes() {
+
+    try {
+
+        const response =
+            await fetch("/api/nodes");
+
+        if (!response.ok) {
+            throw new Error("Node API failed");
+        }
+
+        const data =
+            await response.json();
+
+        nodesData =
+            Array.isArray(data) ? data : [];
+
+        updateNodeSummary();
+
+        renderNodes();
+
+        updateGraphNodes();
+
+    } catch (error) {
+
+        console.error(
+            "Error loading nodes:",
+            error
+        );
+
+        document.getElementById("nodeTable")
+            .innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty">
+                        Unable to load node data
+                    </td>
+                </tr>
+            `;
+
+    }
+
+}
+
+
+/* LOAD ROUTES */
+
+async function loadRoutes() {
+
+    try {
+
+        const response =
+            await fetch("/api/routes");
+
+        if (!response.ok) {
+            throw new Error("Route API failed");
+        }
+
+        const data =
+            await response.json();
+
+        routesData =
+            Array.isArray(data) ? data : [];
+
+        updateRouteSummary();
+
+        renderRoutes();
+
+        renderNetworkLines();
+
+    } catch (error) {
+
+        console.error(
+            "Error loading routes:",
+            error
+        );
+
+        document.getElementById("routeTable")
+            .innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        Unable to load route data
+                    </td>
+                </tr>
+            `;
+
+    }
+
+}
+
+
+/* NODE SUMMARY */
+
+function updateNodeSummary() {
+
+    const total =
+        nodesData.length;
+
+    const active =
+        nodesData.filter(node =>
+            String(node.status || "")
+                .toUpperCase() === "ACTIVE"
+        ).length;
+
+    document.getElementById("totalNodes")
+        .textContent = total;
+
+    document.getElementById("activeNodes")
+        .textContent = active;
+
+}
+
+
+/* ROUTE SUMMARY */
+
+function updateRouteSummary() {
+
+    const available =
+        routesData.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "AVAILABLE"
+        ).length;
+
+    const blocked =
+        routesData.filter(route =>
+            String(route.status || "")
+                .toUpperCase() === "BLOCKED"
+        ).length;
+
+    document.getElementById("availableRoutes")
+        .textContent = available;
+
+    document.getElementById("blockedRoutes")
+        .textContent = blocked;
+
+}
+
+
+/* RENDER NODE TABLE */
+
+function renderNodes() {
+
+    const table =
+        document.getElementById("nodeTable");
+
+
+    if (nodesData.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No communication nodes found
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        nodesData.map(node => {
+
+            const status =
+                String(node.status || "INACTIVE")
+                    .toUpperCase();
+
+            const statusClass =
+                status === "ACTIVE"
+                    ? "badge-active"
+                    : "badge-inactive";
+
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                node.node_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            node.last_message || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            node.messages_forwarded ?? 0
+                        )}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* RENDER ROUTE TABLE */
+
+function renderRoutes() {
+
+    const table =
+        document.getElementById("routeTable");
+
+
+    if (routesData.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="5" class="empty">
+                    No network routes found
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        routesData.map(route => {
+
+            const status =
+                String(route.status || "BLOCKED")
+                    .toUpperCase();
+
+
+            const statusClass =
+                status === "AVAILABLE"
+                    ? "badge-available"
+                    : "badge-blocked";
+
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                route.route_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            route.source_node || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            route.destination_node || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            route.distance ?? "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* UPDATE GRAPH NODE STATUS */
+
+function updateGraphNodes() {
+
+    nodesData.forEach(node => {
+
+        const nodeId =
+            node.node_id;
+
+        const element =
+            document.getElementById(
+                "node-" + nodeId
+            );
+
+        if (!element) {
+            return;
+        }
+
+
+        const status =
+            String(node.status || "INACTIVE")
+                .toUpperCase();
+
+
+        const statusElement =
+            element.querySelector(".node-status");
+
+
+        if (status === "ACTIVE") {
+
+            element.classList.add(
+                "node-active"
+            );
+
+            element.classList.remove(
+                "node-inactive"
+            );
+
+        } else {
+
+            element.classList.add(
+                "node-inactive"
+            );
+
+            element.classList.remove(
+                "node-active"
+            );
+
+        }
+
+
+        statusElement.textContent =
+            status;
+
+    });
+
+}
+
+
+/* GET NODE POSITION */
+
+function getNodePosition(nodeId) {
+
+    const positions = {
+
+        "N01": {
+            x: 150,
+            y: 112
+        },
+
+        "N02": {
+            x: 380,
+            y: 81
+        },
+
+        "N03": {
+            x: 620,
+            y: 135
+        },
+
+        "N04": {
+            x: 350,
+            y: 292
+        },
+
+        "N05": {
+            x: 650,
+            y: 315
+        }
+
+    };
+
+    return positions[nodeId];
+
+}
+
+
+/* DRAW NETWORK ROUTES */
+
+function renderNetworkLines() {
+
+    const svg =
+        document.getElementById(
+            "networkSvg"
+        );
+
+
+    svg.innerHTML = "";
+
+
+    routesData.forEach(route => {
+
+        const source =
+            getNodePosition(
+                route.source_node
+            );
+
+        const destination =
+            getNodePosition(
+                route.destination_node
+            );
+
+
+        if (!source || !destination) {
+            return;
+        }
+
+
+        const line =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+            );
+
+
+        line.setAttribute(
+            "x1",
+            source.x
+        );
+
+        line.setAttribute(
+            "y1",
+            source.y
+        );
+
+        line.setAttribute(
+            "x2",
+            destination.x
+        );
+
+        line.setAttribute(
+            "y2",
+            destination.y
+        );
+
+
+        const status =
+            String(route.status || "")
+                .toUpperCase();
+
+
+        line.classList.add(
+            "route-line"
+        );
+
+
+        if (status === "AVAILABLE") {
+
+            line.classList.add(
+                "available-line"
+            );
+
+        } else {
+
+            line.classList.add(
+                "blocked-line"
+            );
+
+        }
+
+
+        svg.appendChild(line);
+
+    });
+
+}
+
+
+/* HTML SAFETY */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* INITIAL LOAD */
+
+loadSystemStatus();
+
+loadNodes();
+
+loadRoutes();
+
+
+/* AUTO REFRESH */
+
+setInterval(() => {
+
+    loadSystemStatus();
+
+    loadNodes();
+
+    loadRoutes();
+
+}, 10000);
+
+</script>
+
+</body>
+</html>

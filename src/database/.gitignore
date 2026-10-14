@@ -1,0 +1,22 @@
+# Java compiled files
+*.class
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# VS Code
+.vscode/
+
+# IntelliJ IDEA
+.idea/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db

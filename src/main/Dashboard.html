@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>TRACEON - Dashboard</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 240px;
+    background: #ffffff;
+    border-right: 1px solid #e5e7eb;
+    padding: 25px 18px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.nav a {
+    display: block;
+    text-decoration: none;
+    color: #4b5563;
+    padding: 13px 15px;
+    border-radius: 8px;
+    margin-bottom: 7px;
+    font-size: 14px;
+}
+
+.nav a:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.nav a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* MAIN */
+
+.main {
+    margin-left: 240px;
+    padding: 30px;
+    width: calc(100% - 240px);
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.page-description {
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.system-status {
+    background: #ecfdf5;
+    color: #059669;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* SUMMARY CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+}
+
+.card-title {
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.card-value {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.red {
+    color: #dc2626;
+}
+
+.orange {
+    color: #d97706;
+}
+
+.blue {
+    color: #2563eb;
+}
+
+.green {
+    color: #16a34a;
+}
+
+/* SECTION */
+
+.section {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.refresh-text {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* DASHBOARD GRID */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* NETWORK */
+
+.network-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.network-lines {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.network-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 70px;
+}
+
+.node-icon {
+    width: 42px;
+    height: 42px;
+    margin: auto;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+}
+
+.node-active .node-icon {
+    border-color: #16a34a;
+}
+
+.node-inactive .node-icon {
+    border-color: #dc2626;
+}
+
+.node-label {
+    margin-top: 5px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.node-status {
+    font-size: 9px;
+    color: #6b7280;
+}
+
+.dn01 {
+    left: 18%;
+    top: 25%;
+}
+
+.dn02 {
+    left: 48%;
+    top: 18%;
+}
+
+.dn03 {
+    left: 78%;
+    top: 30%;
+}
+
+.dn04 {
+    left: 35%;
+    top: 70%;
+}
+
+.dn05 {
+    left: 68%;
+    top: 72%;
+}
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 11px;
+    background: #f8fafc;
+    color: #6b7280;
+    font-size: 11px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+td {
+    padding: 12px 11px;
+    border-bottom: 1px solid #eef0f3;
+    font-size: 12px;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+/* BADGES */
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.badge-high {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-medium {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.badge-low {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.badge-active,
+.badge-available,
+.badge-rescued {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-blocked {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-progress {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.badge-pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.empty {
+    text-align: center;
+    padding: 25px;
+    color: #9ca3af;
+}
+
+/* PROGRESS */
+
+.progress-container {
+    width: 100px;
+    height: 7px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 850px) {
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        width: calc(100% - 190px);
+        padding: 20px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        TRACEON
+    </div>
+
+    <div class="subtitle">
+        Disaster Rescue System
+    </div>
+
+    <div class="nav">
+
+        <a href="/" class="active">
+            Dashboard
+        </a>
+
+        <a href="/alerts">
+            Alerts
+        </a>
+
+        <a href="/families">
+            Families
+        </a>
+
+        <a href="/network">
+            Node Network
+        </a>
+
+        <a href="/routes">
+            Routes
+        </a>
+
+        <a href="/rescue">
+            Rescue Tracking
+        </a>
+
+        <a href="/reports">
+            Reports
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+    <div class="topbar">
+
+        <div>
+
+            <div class="page-title">
+                TRACEON Dashboard
+            </div>
+
+            <div class="page-description">
+                Disaster survivor tracking and rescue coordination
+            </div>
+
+        </div>
+
+        <div class="system-status" id="systemStatus">
+            ● SYSTEM ONLINE
+        </div>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                HIGH PRIORITY SOS
+            </div>
+
+            <div class="card-value red" id="highSOS">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                HELP REQUESTS
+            </div>
+
+            <div class="card-value orange" id="helpRequests">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                REGISTERED FAMILIES
+            </div>
+
+            <div class="card-value blue" id="familiesCount">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                ACTIVE NODES
+            </div>
+
+            <div class="card-value green" id="activeNodes">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                RESCUE CASES
+            </div>
+
+            <div class="card-value blue" id="rescueCases">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NETWORK -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <div class="section-title">
+                Node Network Graph
+            </div>
+
+            <div class="refresh-text">
+                Auto refresh: 10 seconds
+            </div>
+
+        </div>
+
+
+        <div class="network-container">
+
+            <svg
+                class="network-lines"
+                viewBox="0 0 1000 300"
+                preserveAspectRatio="none"
+                id="networkSvg">
+            </svg>
+
+
+            <div class="network-node dn01" id="dashboard-N01">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N01
+                </div>
+
+                <div class="node-status">
+                    Loading
+                </div>
+
+            </div>
+
+
+            <div class="network-node dn02" id="dashboard-N02">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N02
+                </div>
+
+                <div class="node-status">
+                    Loading
+                </div>
+
+            </div>
+
+
+            <div class="network-node dn03" id="dashboard-N03">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N03
+                </div>
+
+                <div class="node-status">
+                    Loading
+                </div>
+
+            </div>
+
+
+            <div class="network-node dn04" id="dashboard-N04">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N04
+                </div>
+
+                <div class="node-status">
+                    Loading
+                </div>
+
+            </div>
+
+
+            <div class="network-node dn05" id="dashboard-N05">
+
+                <div class="node-icon">
+                    📡
+                </div>
+
+                <div class="node-label">
+                    N05
+                </div>
+
+                <div class="node-status">
+                    Loading
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TWO COLUMN DATA -->
+
+    <div class="dashboard-grid">
+
+
+        <!-- ALERTS -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+                    Recent Emergency Alerts
+                </div>
+
+                <a
+                    href="/alerts"
+                    style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-size:12px;">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Alert
+                            </th>
+
+                            <th>
+                                Family
+                            </th>
+
+                            <th>
+                                Priority
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="alertTable">
+
+                        <tr>
+
+                            <td colspan="4" class="empty">
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- FAMILIES -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+                    Registered Families
+                </div>
+
+                <a
+                    href="/families"
+                    style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-size:12px;">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Family ID
+                            </th>
+
+                            <th>
+                                House ID
+                            </th>
+
+                            <th>
+                                Family
+                            </th>
+
+                            <th>
+                                Location
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="familyTable">
+
+                        <tr>
+
+                            <td colspan="4" class="empty">
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- ROUTES -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+                    Communication Routes
+                </div>
+
+                <a
+                    href="/routes"
+                    style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-size:12px;">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Route
+                            </th>
+
+                            <th>
+                                Source
+                            </th>
+
+                            <th>
+                                Destination
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="routeTable">
+
+                        <tr>
+
+                            <td colspan="4" class="empty">
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESCUE -->
+
+        <div class="section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+                    Rescue Tracking
+                </div>
+
+                <a
+                    href="/rescue"
+                    style="
+                    text-decoration:none;
+                    color:#2563eb;
+                    font-size:12px;">
+                    View All
+                </a>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Case
+                            </th>
+
+                            <th>
+                                Family
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Progress
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="rescueTable">
+
+                        <tr>
+
+                            <td colspan="4" class="empty">
+                                Loading...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* DATA */
+
+let alertsData = [];
+let familiesData = [];
+let nodesData = [];
+let routesData = [];
+let rescueData = [];
+
+
+/* SYSTEM STATUS */
+
+async function loadSystemStatus() {
+
+    try {
+
+        const response =
+            await fetch("/api/status");
+
+        if (!response.ok) {
+            throw new Error("Status failed");
+        }
+
+        const data =
+            await response.json();
+
+        if (data.status === "ONLINE") {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM ONLINE";
+
+        } else {
+
+            document.getElementById("systemStatus")
+                .innerHTML = "● SYSTEM OFFLINE";
+
+        }
+
+    } catch (error) {
+
+        document.getElementById("systemStatus")
+            .innerHTML = "● BACKEND OFFLINE";
+
+    }
+
+}
+
+
+/* LOAD ALERTS */
+
+async function loadAlerts() {
+
+    try {
+
+        const response =
+            await fetch("/api/alerts");
+
+        if (!response.ok) {
+            throw new Error("Alerts failed");
+        }
+
+        const data =
+            await response.json();
+
+        alertsData =
+            Array.isArray(data) ? data : [];
+
+        updateAlertCard();
+
+        renderAlerts();
+
+    } catch (error) {
+
+        console.error(
+            "Alert loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD FAMILIES */
+
+async function loadFamilies() {
+
+    try {
+
+        const response =
+            await fetch("/api/family");
+
+        if (!response.ok) {
+            throw new Error("Families failed");
+        }
+
+        const data =
+            await response.json();
+
+        familiesData =
+            Array.isArray(data) ? data : [];
+
+        document.getElementById("familiesCount")
+            .textContent = familiesData.length;
+
+        renderFamilies();
+
+    } catch (error) {
+
+        console.error(
+            "Family loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD NODES */
+
+async function loadNodes() {
+
+    try {
+
+        const response =
+            await fetch("/api/nodes");
+
+        if (!response.ok) {
+            throw new Error("Nodes failed");
+        }
+
+        const data =
+            await response.json();
+
+        nodesData =
+            Array.isArray(data) ? data : [];
+
+        const active =
+            nodesData.filter(node =>
+                String(node.status || "")
+                    .toUpperCase() === "ACTIVE"
+            ).length;
+
+        document.getElementById("activeNodes")
+            .textContent = active;
+
+        updateDashboardNodes();
+
+    } catch (error) {
+
+        console.error(
+            "Node loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD ROUTES */
+
+async function loadRoutes() {
+
+    try {
+
+        const response =
+            await fetch("/api/routes");
+
+        if (!response.ok) {
+            throw new Error("Routes failed");
+        }
+
+        const data =
+            await response.json();
+
+        routesData =
+            Array.isArray(data) ? data : [];
+
+        renderRoutes();
+
+        renderNetworkLines();
+
+    } catch (error) {
+
+        console.error(
+            "Route loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* LOAD RESCUE */
+
+async function loadRescue() {
+
+    try {
+
+        const response =
+            await fetch("/api/rescue");
+
+        if (!response.ok) {
+            throw new Error("Rescue failed");
+        }
+
+        const data =
+            await response.json();
+
+        rescueData =
+            Array.isArray(data) ? data : [];
+
+        document.getElementById("rescueCases")
+            .textContent = rescueData.length;
+
+        renderRescue();
+
+    } catch (error) {
+
+        console.error(
+            "Rescue loading error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ALERT SUMMARY */
+
+function updateAlertCard() {
+
+    const high =
+        alertsData.filter(alert =>
+            String(alert.priority || "")
+                .toUpperCase() === "HIGH"
+        ).length;
+
+
+    const help =
+        alertsData.filter(alert =>
+            String(alert.alert_type || "")
+                .toUpperCase() === "HELP"
+            ||
+            String(alert.priority || "")
+                .toUpperCase() === "MEDIUM"
+        ).length;
+
+
+    document.getElementById("highSOS")
+        .textContent = high;
+
+    document.getElementById("helpRequests")
+        .textContent = help;
+
+}
+
+
+/* RENDER ALERTS */
+
+function renderAlerts() {
+
+    const table =
+        document.getElementById("alertTable");
+
+
+    const data =
+        alertsData.slice(0, 5);
+
+
+    if (data.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No emergency alerts
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        data.map(alert => {
+
+            const priority =
+                String(
+                    alert.priority || "LOW"
+                ).toUpperCase();
+
+
+            const status =
+                String(
+                    alert.status || "PENDING"
+                ).toUpperCase();
+
+
+            let priorityClass =
+                "badge-low";
+
+
+            if (priority === "HIGH") {
+                priorityClass = "badge-high";
+            }
+
+            else if (priority === "MEDIUM") {
+                priorityClass = "badge-medium";
+            }
+
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                alert.alert_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            alert.family_id || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="badge ${priorityClass}">
+                            ${escapeHTML(priority)}
+                        </span>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(status)}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* RENDER FAMILIES */
+
+function renderFamilies() {
+
+    const table =
+        document.getElementById("familyTable");
+
+
+    const data =
+        familiesData.slice(0, 5);
+
+
+    if (data.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No registered families
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        data.map(family => {
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                family.family_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            family.house_id || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            family.family_name || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            family.location || "-"
+                        )}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* RENDER ROUTES */
+
+function renderRoutes() {
+
+    const table =
+        document.getElementById("routeTable");
+
+
+    const data =
+        routesData.slice(0, 5);
+
+
+    if (data.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No communication routes
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        data.map(route => {
+
+            const status =
+                String(
+                    route.status || "BLOCKED"
+                ).toUpperCase();
+
+
+            const statusClass =
+                status === "AVAILABLE"
+                    ? "badge-available"
+                    : "badge-blocked";
+
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                route.route_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            route.source_node || "-"
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            route.destination_node || "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* RENDER RESCUE */
+
+function renderRescue() {
+
+    const table =
+        document.getElementById("rescueTable");
+
+
+    const data =
+        rescueData.slice(0, 5);
+
+
+    if (data.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="4" class="empty">
+                    No rescue cases
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    table.innerHTML =
+        data.map(rescueCase => {
+
+            const status =
+                String(
+                    rescueCase.status || "PENDING"
+                ).toUpperCase();
+
+
+            let statusClass =
+                "badge-pending";
+
+
+            if (status === "IN PROGRESS") {
+                statusClass = "badge-progress";
+            }
+
+            else if (status === "RESCUED") {
+                statusClass = "badge-rescued";
+            }
+
+
+            let progress =
+                Number(
+                    rescueCase.progress || 0
+                );
+
+
+            if (progress < 0) {
+                progress = 0;
+            }
+
+            if (progress > 100) {
+                progress = 100;
+            }
+
+
+            return `
+                <tr>
+
+                    <td>
+                        <strong>
+                            ${escapeHTML(
+                                rescueCase.case_id || "-"
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            rescueCase.family_id || "-"
+                        )}
+                    </td>
+
+                    <td>
+
+                        <span class="badge ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="progress-container">
+
+                            <div
+                                class="progress-bar"
+                                style="width:${progress}%">
+                            </div>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+}
+
+
+/* NODE GRAPH */
+
+function updateDashboardNodes() {
+
+    nodesData.forEach(node => {
+
+        const element =
+            document.getElementById(
+                "dashboard-" + node.node_id
+            );
+
+
+        if (!element) {
+            return;
+        }
+
+
+        const status =
+            String(
+                node.status || "INACTIVE"
+            ).toUpperCase();
+
+
+        const statusElement =
+            element.querySelector(
+                ".node-status"
+            );
+
+
+        if (status === "ACTIVE") {
+
+            element.classList.add(
+                "node-active"
+            );
+
+            element.classList.remove(
+                "node-inactive"
+            );
+
+        } else {
+
+            element.classList.add(
+                "node-inactive"
+            );
+
+            element.classList.remove(
+                "node-active"
+            );
+
+        }
+
+
+        statusElement.textContent =
+            status;
+
+    });
+
+}
+
+
+/* GRAPH POSITIONS */
+
+function getNodePosition(nodeId) {
+
+    const positions = {
+
+        "N01": {
+            x: 180,
+            y: 75
+        },
+
+        "N02": {
+            x: 480,
+            y: 54
+        },
+
+        "N03": {
+            x: 780,
+            y: 90
+        },
+
+        "N04": {
+            x: 350,
+            y: 210
+        },
+
+        "N05": {
+            x: 680,
+            y: 216
+        }
+
+    };
+
+
+    return positions[nodeId];
+
+}
+
+
+/* DRAW ROUTES */
+
+function renderNetworkLines() {
+
+    const svg =
+        document.getElementById(
+            "networkSvg"
+        );
+
+
+    svg.innerHTML = "";
+
+
+    routesData.forEach(route => {
+
+        const source =
+            getNodePosition(
+                route.source_node
+            );
+
+        const destination =
+            getNodePosition(
+                route.destination_node
+            );
+
+
+        if (!source || !destination) {
+            return;
+        }
+
+
+        const line =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "line"
+            );
+
+
+        line.setAttribute(
+            "x1",
+            source.x
+        );
+
+        line.setAttribute(
+            "y1",
+            source.y
+        );
+
+        line.setAttribute(
+            "x2",
+            destination.x
+        );
+
+        line.setAttribute(
+            "y2",
+            destination.y
+        );
+
+
+        line.setAttribute(
+            "stroke-width",
+            "3"
+        );
+
+
+        const status =
+            String(
+                route.status || ""
+            ).toUpperCase();
+
+
+        if (status === "AVAILABLE") {
+
+            line.setAttribute(
+                "stroke",
+                "#16a34a"
+            );
+
+        } else {
+
+            line.setAttribute(
+                "stroke",
+                "#dc2626"
+            );
+
+            line.setAttribute(
+                "stroke-dasharray",
+                "8 7"
+            );
+
+        }
+
+
+        svg.appendChild(line);
+
+    });
+
+}
+
+
+/* HTML SAFETY */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* INITIAL LOAD */
+
+loadSystemStatus();
+
+loadAlerts();
+
+loadFamilies();
+
+loadNodes();
+
+loadRoutes();
+
+loadRescue();
+
+
+/* AUTO REFRESH */
+
+setInterval(() => {
+
+    loadSystemStatus();
+
+    loadAlerts();
+
+    loadFamilies();
+
+    loadNodes();
+
+    loadRoutes();
+
+    loadRescue();
+
+}, 10000);
+
+</script>
+
+</body>
+</html>
