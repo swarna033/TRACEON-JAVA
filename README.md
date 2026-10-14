@@ -248,3 +248,32 @@ Other Pages
 - Routes: http://localhost:8080/routes
 - Rescue: http://localhost:8080/rescue
 - Reports: http://localhost:8080/reports
+## System Screenshots
+
+### Dashboard
+
+![TRACEON Dashboard](screenshots/01-dashboard.png)
+
+### Emergency Alerts
+
+![Emergency Alerts](screenshots/02-alerts.png)
+
+### Family Management
+
+![Family Management](screenshots/03-families.png)
+
+### Node Network
+
+![Node Network](screenshots/04-node-network.png)
+
+### Route Monitoring
+
+![Route Monitoring](screenshots/05-routes.png)
+
+### Rescue Tracking
+
+![Rescue Tracking](screenshots/06-rescue.png)
+
+### System Reports
+
+![System Reports](screenshots/07-reports.png)
